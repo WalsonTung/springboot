@@ -7,5 +7,10 @@
 </head>
 <body>
 <span th:text="${name}"></span>
+        <form method="POST" action="http://10.74.0.217:8080/ods/dts/uploadNongClaimFile" enctype="multipart/form-data">
+		    <input type="hidden" name="orderNo" value="cf5c17326e0c407b8ccda70d56c82ca1">
+		    选择文件<input type="file" name="uploadFile">
+		    <input type="submit" value="提交"> 
+		</form>
 </body>
 </html>
