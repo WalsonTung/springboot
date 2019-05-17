@@ -22,7 +22,7 @@ import com.zhengzhaoxi.webdemo.model.DtsNongReportCase;
 @SpringBootTest
 public class DtsNongReportCaseTest {
 
-	
+	@Test
 	public void testPostNongReportCase() {
 		DtsNongReportCase reportCase = new DtsNongReportCase();
 		reportCase.setOrderNo(StringUtils.newUuid());
@@ -37,13 +37,14 @@ public class DtsNongReportCaseTest {
 		list.add(reportCase);
 		String data =  JsonUtils.toJson(list);
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("serviceAccount", "test");
+		map.put("serviceAccount", "nongclaim");
 		map.put("data", data);
 		try {
-			String requestUrl = "http://10.74.0.217:8080/ods/dts/saveNongClaimReportCases";
+			HttpClient.setWebProxy(true);
+			String requestUrl = "http://api.cxshz.test.cpic.com.cn/ods/dts/saveNongClaimReportCases";
 			String result = HttpClient.newInstance().createRequest(requestUrl).postJson(map);
 		    System.out.print(result);
-			Assert.assertTrue(result.contains("000001"));
+			Assert.assertTrue(result.contains("000000"));
 		}  catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertFalse(e.getMessage(), true);
@@ -87,7 +88,7 @@ public class DtsNongReportCaseTest {
 			Assert.assertFalse(e.getMessage(), true);
 		}
 	}
-	@Test
+	
 	public void testUpdateFile() {
 		File file = new File("D:\\test.jpg");
 		if(!file.exists()) {

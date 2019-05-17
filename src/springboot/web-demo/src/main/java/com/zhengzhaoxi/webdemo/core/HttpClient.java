@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.text.MessageFormat;
@@ -146,6 +147,17 @@ public final class HttpClient {
 		
 		return requestData(args);
 	}	
+	
+	public String postXml(String xmlData) throws Exception {
+		if(httpUrlConn == null) {
+			throw new Exception("请先创建Request.");
+		}
+        httpUrlConn.setRequestMethod("POST");
+        httpUrlConn.setRequestProperty("Content-Type","text/xml; charset=UTF-8");
+        String args = xmlData;
+		
+		return requestData(args);
+	}
 	
 	public void loadData(final String data,final OutputStream out) throws IOException {
 		httpUrlConn.connect();
