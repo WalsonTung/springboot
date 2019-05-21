@@ -11,6 +11,10 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.zhengzhaoxi.webdemo.core.HttpClient;
 import com.zhengzhaoxi.webdemo.core.TessOcrFacade;
 
@@ -22,7 +26,7 @@ public class NongCoreSystemCrawlingTest {
 	
 	private final String dataUrl = "http://10.190.48.150:7001/dorado/view-service";
 
-	@Test
+	
 	public void testLogin()   {
 		HttpClient client = HttpClient.newInstance();
 		try {
@@ -53,5 +57,11 @@ public class NongCoreSystemCrawlingTest {
 			}
 		}
 		Assert.assertTrue(true);
+	}
+	
+	@Test
+	public void testHtmlUnit() {
+
+		
 	}
 }
