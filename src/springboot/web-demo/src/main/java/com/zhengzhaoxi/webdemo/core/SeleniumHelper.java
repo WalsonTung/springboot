@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -49,11 +50,20 @@ public class SeleniumHelper {
 	}
 	
 	public SeleniumHelper click(By by) {
+		sleep(2);
 		WebDriverWait wait = new WebDriverWait(mDriver, 60);
 		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
 		
 		element.click();
 		
+		return this;
+	}
+	
+	public SeleniumHelper doubleClick(By by) {
+		sleep(2);
+		WebDriverWait wait = new WebDriverWait(mDriver, 60);
+		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
+		new Actions(mDriver).doubleClick(element).perform();
 		return this;
 	}
 	
@@ -110,6 +120,18 @@ public class SeleniumHelper {
 		}while(element == null);
 		
 		return element.getText();
+	}
+	
+	public SeleniumHelper close() {
+		mDriver.close();
+		return this;
+	}
+	
+	/**
+	 * 关闭浏览器
+	 */
+	public void quit() {
+		mDriver.quit();
 	}
 	
 	private static void sleep(long seconds) {
