@@ -34,10 +34,26 @@ public class SeleniumTest {
 	}
 	
 	/**
-	 * 查勘
+	 * 复核立案
+	 */
+	private void reviewCase() {
+		
+	}
+	
+	/**
+	 * 04立案
+	 */
+	private void registerCase() {
+		
+	}
+	
+	/**
+	 * 03查勘
 	 */
 	private void survey(String loginUrl) {
 		loginUrl = "http://10.190.48.150:7001/systemUse.do?branchCode=5020100&employeeCode=976041&mac=";
+		
+		String noSurveyReason = "因出险远在异地，且损失较小、损失项目明确、单一，已指引被保险人现场拍照，故未进行现场查勘，未能提交查勘记录及查勘工作底稿。";
 		SeleniumHelper helper = SeleniumHelper.getInstance();
 		helper.initChromeDriver()
 		.get(loginUrl)
@@ -51,12 +67,23 @@ public class SeleniumTest {
 		.click(By.cssSelector("div#d_afAccident table.d-form-layout tr:nth-last-child(1) td.first-cell div.d-trigger"))//选择全责
 		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(1) td"))//
 		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
+		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame iframe"))
+		.click(By.cssSelector("div#d_view span#d_btnImageSubmit"))//打开文件系统
+		.switchToParentFrame()
+		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
+		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame iframe"))
+		.click(By.cssSelector("div#d_imageForm div#d_opResultNameAFE div.d-trigger"))//填写未现场查勘原因
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(1) td"))//选择影像缺失
+		.setTextValue(By.cssSelector("div#d_imageForm div#d_memoAFE textarea"),noSurveyReason)
+		.click(By.cssSelector("div#d_view span#d_btnImageSubmit"))
+		.switchToParentFrame()
+		.click(By.cssSelector("div.d-toolbar span#d_btn_submit"))//提交
 		;
 		
 	}
 	
 	/**
-	 * 调度
+	 *02 调度
 	 * @param loginUrl
 	 */
 	private void dispatch(String loginUrl) {
@@ -108,7 +135,7 @@ public class SeleniumTest {
 		;
 	}
 	/**
-	 * 报案
+	 * 01报案
 	 * @param loginUrl
 	 */
 	private void reportCase(String loginUrl) {
