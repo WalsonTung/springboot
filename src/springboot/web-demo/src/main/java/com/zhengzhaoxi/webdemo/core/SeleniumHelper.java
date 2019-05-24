@@ -3,6 +3,7 @@ package com.zhengzhaoxi.webdemo.core;
 import java.util.HashMap;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -117,14 +118,30 @@ public class SeleniumHelper {
 		return this;
 	}
 	
+	public SeleniumHelper scrollTo(int polition) {
+		String js=String.format("var q=document.documentElement.scrollTop=%d",polition);
+		((JavascriptExecutor) mDriver).executeScript(js);
+		return this;
+	}
+	
+	public SeleniumHelper scrollTo(By by, int polition) {
+		String js=String.format("var q=document.documentElement.scrollTop=%d",polition);
+		((JavascriptExecutor) mDriver).executeScript(js,by);
+		return this;
+	}
+	
 	public String getValue(By by) {
-		WebElement element  = null;
-		do {
-			sleep(2);
-			element = ExpectedConditions.presenceOfElementLocated(by).apply(mDriver);
-		}while(element == null);
+		sleep(1);
+		WebDriverWait wait = new WebDriverWait(mDriver, 60);
+		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
 		
 		return element.getText();
+	}
+	
+	public boolean hasElement(By by) {
+		WebDriverWait wait = new WebDriverWait(mDriver, 60);
+		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
+		return element != null;
 	}
 	
 	public SeleniumHelper close() {
