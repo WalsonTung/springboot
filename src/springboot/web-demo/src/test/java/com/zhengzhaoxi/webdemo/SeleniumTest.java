@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.AssertTrue;
 
+import org.apache.taglibs.standard.lang.jstl.DivideOperator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +23,35 @@ public class SeleniumTest {
 	//	System.setProperty("webdriver.ie.driver", "F:\\Softwares\\Network\\selenium\\IEDriverServer_x64_3.14.0\\IEDriverServer.exe");
 		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
 		try {
-			dispatch(loginUrl);
+			survey(loginUrl);
 			
 			Assert.assertTrue(true);
 		}catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertTrue(false);
 		}
+		
+	}
+	
+	/**
+	 * 查勘
+	 */
+	private void survey(String loginUrl) {
+		loginUrl = "http://10.190.48.150:7001/systemUse.do?branchCode=5020100&employeeCode=976041&mac=";
+		SeleniumHelper helper = SeleniumHelper.getInstance();
+		helper.initChromeDriver()
+		.get(loginUrl)
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到调度iframe
+		.setTextValue(By.cssSelector("div#d_queryForm tr.d-form-layout-row td.first-cell input.editor"), "DSHZ94594619050065")
+		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
+		.doubleClick(By.cssSelector("div#d_dgTaskDetail table.data-table tr.current-row"))
+		.switchToDefaultContent()
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到查勘iframe
+		.setTextValue(By.cssSelector("div#d_afSurvey table.d-form-layout tr:nth-last-child(1) td.first-cell textarea"), "损失清单：test")//填写查勘情况
+		.click(By.cssSelector("div#d_afAccident table.d-form-layout tr:nth-last-child(1) td.first-cell div.d-trigger"))//选择全责
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(1) td"))//
+		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
+		;
 		
 	}
 	
@@ -47,8 +70,41 @@ public class SeleniumTest {
 		.setTextValue(By.cssSelector("div#d__uid_23 input.editor"), "DSHZ10794619600000")//填写报案号
 		.click(By.cssSelector("div#d_barQuery span#d_btnQuery"))
 		.doubleClick(By.cssSelector("div#d_dgDispatch table.data-table tbody tr:nth-child(1)"))
-		.switchToFrame(By.cssSelector("div[style*='display=block']>iframe"))//切换到调度详情iframe
-		//.waitToShow(By.cssSelector("div#d_viewMain"))//等待加载调度查询页面
+		.switchToDefaultContent()
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到调度详情iframe
+		.waitToShow(By.cssSelector("div#d_viewMain"))//等待加载调度查询页面
+		.click(By.cssSelector("div#d_dgDispatchInf table.header-table div.d-icon-button"))//新增查勘
+		.click(By.cssSelector("div#d_dgDispatchInf table.header-table div.d-icon-button"))//新增定损
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(2) td:nth-child(3) div.cell"))//查勘
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出下拉列表
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(2) td"))//
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(2) td:nth-child(6)"))//本司
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出下拉列表
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-child(1) td"))//
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(2) td:nth-child(8)"))//查勘人
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出对话框
+		.switchToFrame(By.cssSelector("body>div#d_dlgcompletePersonName div#d_iFrameEmploye iframe"))//
+		.setTextValue(By.cssSelector("div#d_autoFormQueryEntity table.d-form-layout tr.d-form-layout-row  td:nth-last-child(1) input.editor"), "詹青晓")//
+		.click(By.cssSelector("div.d-toolbar span#d_btnSearch"))
+		.doubleClick(By.cssSelector("div#d_dataGridUsers table.data-table tr.current-row"))
+		.switchToParentFrame()
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(1) td:nth-child(3) div.cell"))//定损
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出下拉列表
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(1) td"))//
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(1) td:nth-child(6)"))//本司
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出下拉列表
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-child(1) td"))//
+		.click(By.cssSelector("div#d_dgDispatchInf table.data-table tr:nth-last-child(1) td:nth-child(8)"))//定损人
+		.click(By.cssSelector("div#d_dgDispatchInf div.d-grid-cell-editor div.d-trigger"))//弹出对话框
+		.switchToFrame(By.cssSelector("body>div#d_dlgcompletePersonName div#d_iFrameEmploye iframe"))//
+		.setTextValue(By.cssSelector("div#d_autoFormQueryEntity table.d-form-layout tr.d-form-layout-row  td:nth-last-child(1) input.editor"), "詹青晓")//
+		.click(By.cssSelector("div.d-toolbar span#d_btnSearch"))
+		.doubleClick(By.cssSelector("div#d_dataGridUsers table.data-table tr.current-row"))
+		.switchToParentFrame()
+		//.click(By.cssSelector("div.d-toolbar span#d_btn_submit"))//提交
+		.switchToDefaultContent()
+		.click(By.cssSelector("div#d_tabset>div.d-tabbar ul.tabs li.tab-selected span.close"))//关闭页签
+		.click(By.cssSelector("div#d_tabset>div.d-tabbar ul.tabs li.tab-selected span.close"))//关闭页签
 		;
 	}
 	/**

@@ -107,6 +107,11 @@ public class SeleniumHelper {
 		return this;
 	}
 	
+	public SeleniumHelper switchToParentFrame() {
+		mDriver.switchTo().parentFrame();
+		return this;
+	}
+	
 	public SeleniumHelper switchToDefaultContent() {
 		mDriver.switchTo().defaultContent();
 		return this;
