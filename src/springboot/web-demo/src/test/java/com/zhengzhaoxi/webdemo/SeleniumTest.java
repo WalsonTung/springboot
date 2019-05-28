@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.validation.constraints.AssertTrue;
 
-import org.apache.taglibs.standard.lang.jstl.DivideOperator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -28,7 +28,7 @@ public class SeleniumTest {
 	//	System.setProperty("webdriver.ie.driver", "F:\\Softwares\\Network\\selenium\\IEDriverServer_x64_3.14.0\\IEDriverServer.exe");
 		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
 		try {
-			fixLoss();
+			getPayment();
 			
 			Assert.assertTrue(true);
 		}catch (Exception e) {
@@ -36,6 +36,36 @@ public class SeleniumTest {
 			Assert.assertTrue(false);
 		}
 		
+	}
+	
+	/**
+	 * 获取赔款数据
+	 */
+	private void getPayment() {
+		String loginUrl = "http://10.190.48.150:7001/systemUse.do?branchCode=5020100&employeeCode=434&mac=";
+		SeleniumHelper helper = SeleniumHelper.getInstance();
+		helper.initChromeDriver()
+		.get(loginUrl)
+		.click(By.xpath("//div[@id='d_accordion']/div/div/div[contains(text(),'理赔管理')]"))
+		.click(By.xpath("//div[@id='d_accordion']//div[@id='d_claim']/ul/li/span/span[contains(text(),'综合查询')]"))
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到我的任务组iframe
+		.setTextValue(By.cssSelector("div#d_claimFolderQueryConditionForm tr.first-row td:nth-child(2) input.editor"), mReportCase.getReportCaseNo())
+		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
+		.doubleClick(By.cssSelector("div#d_gridClaimFolderQueryResult table.data-table  tbody tr:nth-child(1)"))
+		.switchToDefaultContent()
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到案件详情iframe
+		.click(By.cssSelector("div#d_tabControl1 ul.bar-tabs li:nth-last-child(2)"))
+		;
+		List<WebElement> rows =  helper.getElements(By.cssSelector("div#d_dgPaidRealIncome table.data-table tr.row"));
+		String paymentNo = null;
+		String payAmount = null;
+		String payTime = null;
+		for(WebElement row : rows) {
+			paymentNo = row.findElement(By.cssSelector("td:nth-child(3) div")).getText();
+			payAmount = row.findElement(By.cssSelector("td:nth-child(4) div")).getText();
+			payTime = row.findElement(By.cssSelector("td:nth-child(5) div")).getText();
+			System.out.println(paymentNo + ";" +payAmount + ";" + payTime );
+		}
 	}
 	
 	/**
@@ -62,7 +92,34 @@ public class SeleniumTest {
 	 * 05复核立案
 	 */
 	private void reviewCase() {
-		
+		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
+		SeleniumHelper helper = SeleniumHelper.getInstance();
+		helper.initChromeDriver()
+		.get(loginUrl)
+		.click(By.cssSelector("div#d_accordion>div:nth-child(2)"))//理赔任务
+//		.click(By.cssSelector("div#d_claimTask li:nth-child(1)"))//我的任务组
+//		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到我的任务组iframe
+//		.setTextValue(By.cssSelector("div#d_queryForm tr.first-row td.first-cell input.editor"), mReportCase.getReportCaseNo())
+//		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
+//		.click(By.xpath("//div[@id='d_dbvTask']/div/div/div//td[contains(text(),'组别：立案复核')]"))
+//		.doubleClick(By.cssSelector("div#d_dgTaskDetail table.data-table tr:nth-child(1)"))//双击案件
+//		.click(By.cssSelector("body>div.d-dialog div.button-panel span.d-button-focused"))//同意接收立案复核任务
+//		.switchToDefaultContent()
+//		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到立案复核iframe
+//		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btn_pass"))
+//		.click(By.cssSelector("body>div.d-dialog div.button-panel span.d-button-focused"))//同意立案
+		//以下为我的任务入口
+		.click(By.cssSelector("div#d_claimTask li:nth-child(2)"))//我的任务
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到立案复核iframe
+		.setTextValue(By.cssSelector("div#d_viewMain div#d_queryForm tr.first-row td.first-cell input.editor"), mReportCase.getReportCaseNo())//填写报案号
+		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
+		.doubleClick(By.cssSelector("div#d_dgTaskDetail table.data-table tbody tr:nth-child(1)"))
+		.switchToDefaultContent()
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到立案详情iframe
+		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btn_pass"))
+		.click(By.cssSelector("body>div.d-dialog div.button-panel span.d-button-focused"))//同意立案
+        ;
+	
 	}
 	
 	/**
@@ -254,7 +311,7 @@ public class SeleniumTest {
 		mReportCase.setThirdPartyInjury("张先生");
 		mReportCase.setThirdPartyProperty("一头猪");
 		mReportCase.setThirdPartyPropertyOwner("李先生");
-		mReportCase.setReportCaseNo("DSHZ10794619600001");
+		mReportCase.setReportCaseNo("DSHZ94599118000009");
 		mReportCase.setLossAmount(1000.0);
 		mReportCase.setTotalEstimatedLossAmount(900.0);
 	}

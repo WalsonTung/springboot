@@ -1,6 +1,7 @@
 package com.zhengzhaoxi.webdemo.core;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -128,6 +129,13 @@ public class SeleniumHelper {
 		String js=String.format("var q=document.documentElement.scrollTop=%d",polition);
 		((JavascriptExecutor) mDriver).executeScript(js,by);
 		return this;
+	}
+	
+	public List<WebElement> getElements(By by) {
+		sleep(1);
+		WebDriverWait wait = new WebDriverWait(mDriver, 60);
+		List<WebElement> elements = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+		return elements;
 	}
 	
 	public String getValue(By by) {
