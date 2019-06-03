@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -38,13 +41,26 @@ public class SeleniumHelper {
         //prefs.put("profile.default_content_settings.cookies", 2);
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", prefs);
+        options.addArguments("--start-maximized");//页面最大化
+        options.addArguments("--headless");//不提供可视化页面
+        options.addArguments("--disable-gpu");//谷歌文档提到需要加上这个属性来规避bug
+        
         // 设置对谷歌浏览器的初始配置           结束
 
         //新建一个谷歌浏览器对象（driver）
-        mDriver = new ChromeDriver(options);
-        
+        ChromeDriver driver = new ChromeDriver(options);
+        driver.manage().window().setSize(new Dimension(1024,1024));
+        mDriver = driver;
         return this;
     }
+	
+	public SeleniumHelper initFirefoxDriver() {
+		//设置谷歌浏览器驱动，我放在项目的路径下，这个驱动可以帮你打开本地的谷歌浏览器
+        System.setProperty("webdriver.gecko.driver", "F:\\Softwares\\Network\\selenium\\geckodriver-v0.24.0-win64\\geckodriver.exe");
+        FirefoxOptions options = new FirefoxOptions();
+        mDriver = new FirefoxDriver(options);
+        return this;
+	}
 	
 	public SeleniumHelper get(String url) {
 		mDriver.get(url);
@@ -55,9 +71,8 @@ public class SeleniumHelper {
 		sleep(2);
 		WebDriverWait wait = new WebDriverWait(mDriver, 60);
 		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
-		
 		element.click();
-		
+
 		return this;
 	}
 	
@@ -120,14 +135,14 @@ public class SeleniumHelper {
 	}
 	
 	public SeleniumHelper scrollTo(int polition) {
-		String js=String.format("var q=document.documentElement.scrollTop=%d",polition);
+		String js=String.format("window.scrollBy(0, %d)",polition);
 		((JavascriptExecutor) mDriver).executeScript(js);
 		return this;
 	}
 	
 	public SeleniumHelper scrollTo(By by, int polition) {
-		String js=String.format("var q=document.documentElement.scrollTop=%d",polition);
-		((JavascriptExecutor) mDriver).executeScript(js,by);
+		String js=String.format("window.scrollBy(0, %d)",polition);
+		((JavascriptExecutor) mDriver).executeScript("arguments[0].scrollIntoView(false);",by);
 		return this;
 	}
 	

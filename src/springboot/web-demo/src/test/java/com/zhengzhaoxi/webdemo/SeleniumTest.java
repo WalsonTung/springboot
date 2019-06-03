@@ -28,7 +28,7 @@ public class SeleniumTest {
 	//	System.setProperty("webdriver.ie.driver", "F:\\Softwares\\Network\\selenium\\IEDriverServer_x64_3.14.0\\IEDriverServer.exe");
 		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
 		try {
-			getPayment();
+			reportCase(loginUrl);
 			
 			Assert.assertTrue(true);
 		}catch (Exception e) {
@@ -167,20 +167,21 @@ public class SeleniumTest {
 		.setTextValue(By.cssSelector("div#d_queryForm tr.d-form-layout-row td.first-cell input.editor"),mReportCase.getReportCaseNo())
 		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
 		//.doubleClick(By.cssSelector("div#d_dgTaskDetail table.data-table tr.current-row"))
-		.doubleClick(By.cssSelector("div#d_dgTaskDetail table.data-table tr:nth-last-child(1)"))
+		.doubleClick(By.xpath("//div[@id='d_dgTaskDetail']//table[contains(@class,'data-table')]/tbody/tr/td/div[contains(text(),'查勘')]"))
 		.switchToDefaultContent()
 		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到查勘iframe
 		.setTextValue(By.cssSelector("div#d_afSurvey table.d-form-layout tr:nth-last-child(1) td.first-cell textarea"), "损失清单：test")//填写查勘情况
 		.click(By.cssSelector("div#d_afAccident table.d-form-layout tr:nth-last-child(1) td.first-cell div.d-trigger"))//选择全责
 		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tr:nth-last-child(1) td"))//
+//		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
+//		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame>iframe"))
+//		.click(By.cssSelector("div#d_view span#d_btnImageSubmit"))//打开文件系统
+//		.switchToParentFrame()
 		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
-		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame iframe"))
-	//	.click(By.cssSelector("div#d_view span#d_btnImageSubmit"))//打开文件系统
-		.switchToParentFrame()
-		.click(By.cssSelector("div#d_viewMain div.d-toolbar span#d_btnImage"))//点击影像按钮
-		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame iframe"))
-		.click(By.cssSelector("div#d_imageForm div#d_opResultNameAFE div.d-trigger"))//填写未现场查勘原因 (点击无反应，需要多测试)
-		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table tbody>tr:nth-last-child(1) td"))//选择影像缺失
+		.switchToFrame(By.cssSelector("body>div#d_dlgImage div#d_imageFrame>iframe"))
+		.click(By.cssSelector("div#d_imageForm div#d_opResultNameAFE div.d-trigger>div"))//填写未现场查勘原因 (点击无反应，需要多测试)
+		.click(By.cssSelector("div#d_imageForm div#d_opResultNameAFE div.d-trigger>div"))//一次点击无效，需要两次点击
+		.click(By.cssSelector("body>div:nth-last-child(1) table.data-table>tbody>tr:nth-last-child(1)>td"))//选择影像缺失
 		.setTextValue(By.cssSelector("div#d_imageForm div#d_memoAFE textarea"),noSurveyReason)
 		.click(By.cssSelector("div#d_view span#d_btnImageSubmit"))
 		.switchToParentFrame()
@@ -258,40 +259,40 @@ public class SeleniumTest {
 		SeleniumHelper helper = SeleniumHelper.getInstance();
 		helper.initChromeDriver()
 		.get(loginUrl)
-		.click(By.id("d__uid_96"))//理赔管理
-		.click(By.cssSelector("div#d_claim li:nth-child(2)"))//报案
-		.switchToFrame(By.cssSelector("div#d__uid_198>iframe"))//切换到报案iframe
+		.click(By.xpath("//div[@id='d_accordion']/div/div/div[contains(text(),'理赔管理')]"))
+		.click(By.xpath("//div[@id='d_accordion']//div[@id='d_claim']/ul/li/span/span[text()='报案']"))
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到报案iframe
 		.waitToShow(By.cssSelector("div#d_viewMain div#d_afAccident"))//等待加载报案页面
 		.setTextValue(By.cssSelector("div#d_reportorNameAF input.editor"), mReportCase.getReporterName())//填写报案人
-		.setTextValue(By.cssSelector("div#d__uid_37 input"), mReportCase.getReportPhoneNo())//手机
-	//	.setTextValue(By.cssSelector("div#d__uid_39 input.editor"), "")//联系电话
-		.click(By.cssSelector("div#d__uid_47 div.d-trigger"))//联系地址
+		.setTextValue(By.cssSelector("div#d_afReport  table.d-form-layout tr.first-row td:nth-last-child(1) input.editor"), mReportCase.getReportPhoneNo())//手机
+		.setTextValue(By.cssSelector("div#d_afReport  table.d-form-layout tr:nth-child(3) td.first-cell input.editor"), "123456")//联系电话
+		.click(By.cssSelector("div#d_afReport  table.d-form-layout tr:nth-child(4) td.first-cell div.d-trigger"))//联系地址
 		.click(By.cssSelector("div#d_dtArea tbody tr:nth-child(1) td.d-tree-node"))
 		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'河北省')]"))
 		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'石家庄市')]"))
 		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'长安区')]"))
 		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'建北街道')]"))
 		.doubleClick(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'光华路社区')]"))
-		.setTextValue(By.cssSelector("div#d__uid_49 input.editor"), mReportCase.getContactDetailsAddress())//具体地址
-		.setTextValue(By.cssSelector("div#d__uid_68 input.editor"),DateUtils.toDateTimeString( mReportCase.getLossEventTime()),true)//出险时间
-		.click(By.cssSelector("div#d__uid_70 div.d-trigger"))//出险地址
-		.setTextValue(By.cssSelector("div#d__uid_72 input.editor"), mReportCase.getLossEventDetailsPlace(),true)//具体地址d__uid_75
-		.click(By.cssSelector("div#d__uid_75 div.d-trigger"))//选择出险原因
+		.setTextValue(By.cssSelector("div#d_afReport  table.d-form-layout tr:nth-child(4) td:nth-child(2) input.editor"), mReportCase.getContactDetailsAddress())//具体地址
+		.setTextValue(By.cssSelector("div#d_afAccident table.d-form-layout tr.first-row td.first-cell input.editor"),DateUtils.toDateTimeString( mReportCase.getLossEventTime()),true)//出险时间
+		//.click(By.cssSelector("div#d__uid_70 div.d-trigger"))//出险地址
+		.setTextValue(By.cssSelector("div#d_afAccident table.d-form-layout tr.first-row td:nth-child(3) input.editor"), mReportCase.getLossEventDetailsPlace(),true)//具体地址d__uid_75
+		.click(By.cssSelector("div#d_afAccident table.d-form-layout tr:nth-child(3) td.first-cell div.d-trigger"))//选择出险原因
 		.click(By.cssSelector("div#d_dtAccident tr:nth-child(2) td.d-tree-node"))
 		.click(By.cssSelector("div#d_dtAccident tr:nth-child(5) td.d-tree-node"))
 		.doubleClick(By.cssSelector("div#d_dtAccident tr:nth-child(8) td"))
-		.setTextValue(By.cssSelector("div#d__uid_85 textarea"), mReportCase.getCaseDescription())//事故经过
-		.click(By.cssSelector("div#d__uid_101 div.d-trigger"))//选择保单
-		.setTextValue(By.cssSelector("div#d_dlg_PolicyQuery div#d__uid_150 input.editor"), mReportCase.getPolicyNo())
+		.setTextValue(By.cssSelector("div#d_afAccident table.d-form-layout tr:nth-child(5) td.first-cell textarea"), mReportCase.getCaseDescription())//事故经过
+		.click(By.cssSelector("div#d_afPolicy table.d-form-layout tr.first-row td.first-cell div.d-trigger"))//选择保单
+		.setTextValue(By.cssSelector("div#d_dlg_PolicyQuery div#d_afQuery table.d-form-layout tr.first-row td.first-cell input.editor"), mReportCase.getPolicyNo())
 		.click(By.cssSelector("div#d_dlg_PolicyQuery span#d_btnQuery"))
 		.click(By.cssSelector("div#d_dgReportPolicy table.data-table tbody tr:nth-child(1) span.d-checkbox"))
 		.click(By.cssSelector("div#d_dlg_PolicyQuery span#d_btn_returnValue"))
-		.setTextValue(By.cssSelector("div#d__uid_111 input.editor"), mReportCase.getLossCount().toString())//损失数量
-		.setTextValue(By.cssSelector("div#d__uid_121 input.editor"), mReportCase.getLossNumberOfHouseholds().toString())//受损户数
-		.click(By.cssSelector("div#d_viewMain div#d_toolBar span#d_btn_Submit"))//提交
+		.setTextValue(By.cssSelector("div#d_afPolicy table.d-form-layout tr:nth-child(3) td:nth-child(2) input.editor"), mReportCase.getLossCount().toString())//损失数量
+		.setTextValue(By.cssSelector("div#d_afPolicy table.d-form-layout tr:nth-child(4) td:nth-child(2) input.editor"), mReportCase.getLossNumberOfHouseholds().toString())//受损户数
+	//	.click(By.cssSelector("div#d_viewMain div#d_toolBar span#d_btn_Submit"))//提交
 		;
-		mReportCase.setReportCaseNo("");//获取报案号
-		helper.switchToDefaultContent()
+	//	mReportCase.setReportCaseNo("");//获取报案号
+	//	helper.switchToDefaultContent()
 		//.click(By.cssSelector("div#d_tabset>div.d-tabbar ul.tabs li.tab-selected span.close"))//关闭页签
 		;
 	}
@@ -311,7 +312,7 @@ public class SeleniumTest {
 		mReportCase.setThirdPartyInjury("张先生");
 		mReportCase.setThirdPartyProperty("一头猪");
 		mReportCase.setThirdPartyPropertyOwner("李先生");
-		mReportCase.setReportCaseNo("DSHZ94599118000009");
+		mReportCase.setReportCaseNo("DSHZ10794619600000");
 		mReportCase.setLossAmount(1000.0);
 		mReportCase.setTotalEstimatedLossAmount(900.0);
 	}
