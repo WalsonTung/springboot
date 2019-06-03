@@ -30,8 +30,8 @@ public class DtsNongReportCaseTest {
 		reportCase.setLossEventPlace("村口");
 		reportCase.setLossEventTime(new Date());
 		reportCase.setPolicyNo("ASHZ06702416Q000047J");
-		reportCase.setRemark("test");
-		reportCase.setReporterContact("13723746460");
+
+		reportCase.setReporterPhoneNumber("13723746460");
 		reportCase.setReporterName("xin");
 		List<DtsNongReportCase> list = new ArrayList<DtsNongReportCase>();
 		list.add(reportCase);
