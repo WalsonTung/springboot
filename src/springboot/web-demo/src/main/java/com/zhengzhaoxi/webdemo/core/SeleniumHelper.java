@@ -144,18 +144,16 @@ public class SeleniumHelper {
 		return this;
 	}
 	
-	public SeleniumHelper scrollTo(By by, int polition) {
-		String js=String.format("window.scrollBy(0, %d)",polition);
-		((JavascriptExecutor) mDriver).executeScript("arguments[0].scrollIntoView(false);",by);
+	public SeleniumHelper scrollTo(By by) {
+		sleep(1);
+		WebElement el =  mDriver.findElement(by);
+		((JavascriptExecutor) mDriver).executeScript("arguments[0].scrollIntoView();",el);
 		return this;
 	}
 	
 	public List<WebElement> getElements(By by) {
 		sleep(1);
 		return mDriver.findElements(by);
-//		WebDriverWait wait = new WebDriverWait(mDriver, 60);
-//		List<WebElement> elements = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-//		return elements;
 	}
 	
 	public String getText(By by) {

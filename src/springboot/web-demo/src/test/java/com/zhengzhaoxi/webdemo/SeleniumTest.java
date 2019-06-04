@@ -30,8 +30,8 @@ public class SeleniumTest {
 	//	System.setProperty("webdriver.ie.driver", "F:\\Softwares\\Network\\selenium\\IEDriverServer_x64_3.14.0\\IEDriverServer.exe");
 		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
 		try {
-			//reportCase(loginUrl);
-			getCaseStatus();
+			reportCase(loginUrl);
+			//getCaseStatus();
 			Assert.assertTrue(true);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -343,11 +343,14 @@ public class SeleniumTest {
 		helper
 		.click(By.cssSelector("div#d_afReport  table.d-form-layout tr:nth-child(4) td.first-cell div.d-trigger"))//联系地址
 		.click(By.cssSelector("div#d_dtArea tbody tr:nth-child(1) td.d-tree-node"))
-		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'河北省')]"))
-		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'石家庄市')]"))
-		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'长安区')]"))
-		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'建北街道')]"))
-		.doubleClick(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'光华路社区')]"))
+	    .scrollTo(By.xpath("//div[@id='d_dtArea']//tr/td//label[text()='吉林省']"))
+		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[text()='山东省']"))
+		.scrollTo(By.xpath("//div[@id='d_dtArea']//tr/td//label[text()='山东省']"))
+		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[text()='济南市']"))
+		.scrollTo(By.xpath("//div[@id='d_dtArea']//tr/td//label[text()='平阴县']"))
+		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'济南市开发区')]"))
+		.click(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'舜华路街道')]"))
+		.doubleClick(By.xpath("//div[@id='d_dtArea']//tr/td//label[contains(text(),'齐鲁软件园社区居委会')]"))
 		.setTextValue(By.cssSelector("div#d_afReport  table.d-form-layout tr:nth-child(4) td:nth-child(2) input.editor"), mReportCase.getReporterAddress())//具体地址
 		.setTextValue(By.cssSelector("div#d_afAccident table.d-form-layout tr.first-row td.first-cell input.editor"),DateUtils.toDateTimeString( mReportCase.getLossEventTime()),true)//出险时间
 		//.click(By.cssSelector("div#d__uid_70 div.d-trigger"))//出险地址
@@ -364,14 +367,14 @@ public class SeleniumTest {
 		.click(By.cssSelector("div#d_dlg_PolicyQuery span#d_btn_returnValue"))
 		.setTextValue(By.cssSelector("div#d_afPolicy table.d-form-layout tr:nth-child(3) td:nth-child(2) input.editor"), mReportCase.getLossCount().toString())//损失数量
 		.setTextValue(By.cssSelector("div#d_afPolicy table.d-form-layout tr:nth-child(4) td:nth-child(2) input.editor"), mReportCase.getLossNumberOfHouseholds().toString())//受损户数
-		.click(By.cssSelector("div#d_viewMain div#d_toolBar span#d_btn_Submit"))//提交
+//		.click(By.cssSelector("div#d_viewMain div#d_toolBar span#d_btn_Submit"))//提交
 		;
-		String msg = helper.getText(By.cssSelector("body>div.d-dialog-focused div.dialog-body div.msg-content>span.msg-text"));
-		if(msg != null && msg.contains("保存成功")) {
-			String[] dataArray = msg.split(":");
-			mReportCase.setReportCaseNo(dataArray[1]);
-			mReportCase.setCaseStatus("报案成功");
-		}
+//		String msg = helper.getText(By.cssSelector("body>div.d-dialog-focused div.dialog-body div.msg-content>span.msg-text"));
+//		if(msg != null && msg.contains("保存成功")) {
+//			String[] dataArray = msg.split(":");
+//			mReportCase.setReportCaseNo(dataArray[1]);
+//			mReportCase.setCaseStatus("报案成功");
+//		}
 	//	helper.switchToDefaultContent()
 		//.click(By.cssSelector("div#d_tabset>div.d-tabbar ul.tabs li.tab-selected span.close"))//关闭页签
 		;
