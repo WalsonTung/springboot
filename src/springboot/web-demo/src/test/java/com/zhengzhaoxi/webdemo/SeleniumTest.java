@@ -31,13 +31,35 @@ public class SeleniumTest {
 		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=999&mac=";
 		try {
 			//reportCase(loginUrl);
-			fixLoss();
+			getCaseStatus();
 			Assert.assertTrue(true);
 		}catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertTrue(false);
 		}
 		
+	}
+	
+	private void getCaseStatus() {
+		String loginUrl = "http://10.186.54.132:31001/systemUse.do?branchCode=5020100&employeeCode=1687&mac=";
+		SeleniumHelper helper = SeleniumHelper.getInstance();
+		helper.initChromeDriver(true)
+		.get(loginUrl)
+		.click(By.xpath("//div[@id='d_accordion']/div/div/div[contains(text(),'理赔管理')]"))
+		.click(By.xpath("//div[@id='d_accordion']//div[@id='d_claim']/ul/li/span/span[contains(text(),'综合查询')]"))
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到我的任务组iframe
+		.setTextValue(By.cssSelector("div#d_claimFolderQueryConditionForm tr.first-row td:nth-child(2) input.editor"), mReportCase.getReportCaseNo())
+		.click(By.cssSelector("div.d-toolbar span#d_btnQuery"))
+		.doubleClick(By.cssSelector("div#d_gridClaimFolderQueryResult table.data-table  tbody tr:nth-child(1)"))
+		.switchToDefaultContent()
+		.switchToFrame(By.cssSelector("div.d-iframe[style*='display: block;']>iframe"))//切换到案件详情iframe
+		.click(By.cssSelector("div#d_tabControl1 ul.bar-tabs li:nth-child(1)"))
+		;
+		List<WebElement> rows =  helper.getElements(By.cssSelector("div#d_dgTaskDetail table.data-table tr.row"));
+		if(rows.size() > 0) {
+			String caseStatus = rows.get(0).findElement(By.cssSelector("td:nth-child(1)>div.cell")).getText();
+			mReportCase.setCaseStatus(caseStatus);
+		}
 	}
 	
 	/**
