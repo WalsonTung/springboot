@@ -1,12 +1,16 @@
 package com.zhengzhaoxi.webdemo;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhengzhaoxi.webdemo.model.DtsNongThirdInjuredPersonPojo;
+import com.zhengzhaoxi.webdemo.model.DtsNongThirdPartyLossPojo;
+import com.zhengzhaoxi.webdemo.model.NongSurveyInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +26,7 @@ import com.zhengzhaoxi.webdemo.model.DtsNongReportCase;
 @SpringBootTest
 public class DtsNongReportCaseTest {
 
-	@Test
+
 	public void testPostNongReportCase() {
 		DtsNongReportCase reportCase = new DtsNongReportCase();
 		reportCase.setOrderNo(StringUtils.newUuid());
@@ -33,6 +37,8 @@ public class DtsNongReportCaseTest {
 
 		reportCase.setReporterPhoneNumber("13723746460");
 		reportCase.setReporterName("xin");
+		reportCase.setReporterAddress("深圳市福田区莲花社区深业上城58楼");
+		reportCase.setTotalEstimatedLossAmount(BigDecimal.valueOf(1000.0));
 		List<DtsNongReportCase> list = new ArrayList<DtsNongReportCase>();
 		list.add(reportCase);
 		String data =  JsonUtils.toJson(list);
@@ -40,8 +46,8 @@ public class DtsNongReportCaseTest {
 		map.put("serviceAccount", "nongclaim");
 		map.put("data", data);
 		try {
-			HttpClient.setWebProxy(true);
-			String requestUrl = "http://api.cxshz.test.cpic.com.cn/ods/dts/saveNongClaimReportCases";
+			//HttpClient.setWebProxy(true);
+			String requestUrl = "http://10.74.0.217:8080/ods/dts/saveNongClaimReportCases";
 			String result = HttpClient.newInstance().createRequest(requestUrl).postJson(map);
 		    System.out.print(result);
 			Assert.assertTrue(result.contains("000000"));
@@ -50,6 +56,50 @@ public class DtsNongReportCaseTest {
 			Assert.assertFalse(e.getMessage(), true);
 		}
 		
+	}
+
+	@Test
+	public void testSaveSurveyInfo(){
+		DtsNongThirdInjuredPersonPojo injuredPerson = new DtsNongThirdInjuredPersonPojo();
+		injuredPerson.setInjuredPersonIdNo("412323198309077619");
+		injuredPerson.setInjuredPersonName("董信");
+		injuredPerson.setRemark("轻微挂伤.");
+		List<DtsNongThirdInjuredPersonPojo> injuredPersons = new ArrayList<>();
+		injuredPersons.add(injuredPerson);
+
+		DtsNongThirdPartyLossPojo thirdPartyLoss = new DtsNongThirdPartyLossPojo();
+		thirdPartyLoss.setThirdPropertyName("一条狗");
+		thirdPartyLoss.setThirdPropertyOwner("王二");
+		thirdPartyLoss.setThirdPropertyOwnerIdNo("4346846199304124685");
+		thirdPartyLoss.setRemark("狗重伤，需要去医院治疗.");
+		List<DtsNongThirdPartyLossPojo> thirdPartyLosses = new ArrayList<>();
+		thirdPartyLosses.add(thirdPartyLoss);
+
+		NongSurveyInfo surveyInfo = new NongSurveyInfo();
+		surveyInfo.setOrderNo("032e330e1ee64e659d426f2bd87981c7");
+		surveyInfo.setReportCaseNo("DSHZ10794619600002");
+		surveyInfo.setSurveyDescription("查勘情况：撞轻伤一人，重伤一条狗");
+		surveyInfo.setContainsThirdParty(true);
+		surveyInfo.setFixedLossAmount(BigDecimal.valueOf(900.0));
+		surveyInfo.setThirdInjuredPersonList(injuredPersons);
+		surveyInfo.setThirdPartyLossList(thirdPartyLosses);
+
+		List<NongSurveyInfo> list = new ArrayList<>();
+		list.add(surveyInfo);
+		String data =  JsonUtils.toJson(list);
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("serviceAccount", "nongclaim");
+		map.put("data", data);
+		try {
+			//HttpClient.setWebProxy(true);
+			String requestUrl = "http://10.74.0.217:8080/ods/dts/saveNongSurveyInfo";
+			String result = HttpClient.newInstance().createRequest(requestUrl).postJson(map);
+			System.out.print(result);
+			Assert.assertTrue(result.contains("000000"));
+		}  catch (Exception e) {
+			e.printStackTrace();
+			Assert.assertFalse(e.getMessage(), true);
+		}
 	}
 	
 	
