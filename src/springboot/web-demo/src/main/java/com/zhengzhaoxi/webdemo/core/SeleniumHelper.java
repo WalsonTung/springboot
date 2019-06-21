@@ -31,7 +31,7 @@ public class SeleniumHelper {
 	public  SeleniumHelper initChromeDriver(boolean visible) {
 
         //设置谷歌浏览器驱动，我放在项目的路径下，这个驱动可以帮你打开本地的谷歌浏览器
-        System.setProperty("webdriver.chrome.driver", "F:\\Softwares\\Network\\selenium\\chromedriver_win32_v74\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "F:\\Softwares\\Network\\selenium\\chromedriver_win32_v75\\chromedriver.exe");
 
         // 设置对谷歌浏览器的初始配置           开始
         HashMap<String, Object> prefs = new HashMap<String, Object>();
@@ -48,13 +48,15 @@ public class SeleniumHelper {
         options.addArguments("--disable-gpu");//谷歌文档提到需要加上这个属性来规避bug
         
         // 设置对谷歌浏览器的初始配置           结束
+		if(mDriver == null){
+			//新建一个谷歌浏览器对象（driver）
+			ChromeDriver driver = new ChromeDriver(options);
+			if(!visible) {
+				driver.manage().window().setSize(new Dimension(1024,1024));
+			}
+			mDriver = driver;
+		}
 
-        //新建一个谷歌浏览器对象（driver）
-        ChromeDriver driver = new ChromeDriver(options);
-        if(!visible) {
-        	driver.manage().window().setSize(new Dimension(1024,1024));
-        }
-        mDriver = driver;
         return this;
     }
 	
@@ -169,10 +171,12 @@ public class SeleniumHelper {
 		
 		return list.size() > 0;
 	}
-	
-	public SeleniumHelper close() {
+
+	public void close(){
 		mDriver.close();
-		return this;
+		if(mDriver.getWindowHandles().size() == 0){
+			mDriver = null;
+		}
 	}
 	
 	/**
@@ -180,6 +184,7 @@ public class SeleniumHelper {
 	 */
 	public void quit() {
 		mDriver.quit();
+		mDriver = null;
 	}
 	
 	private static void sleep(long seconds) {
